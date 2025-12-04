@@ -1,0 +1,105 @@
+{
+  "name": "@kne/react-pdf-sign",
+  "version": "0.1.0",
+  "description": "这是一个功能强大的 React PDF 签名组件库，专为需要在 PDF 文档上添加电子签名的应用场景而设计。该组件库提供了灵活的签名解决方案，支持即时签名添加和预定义签名区域两种模式",
+  "syntax": {
+    "esmodules": true
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.modern.js",
+  "source": "src/index.js",
+  "scripts": {
+    "init": "husky && npm run init-example",
+    "start": "run-p start:lib start:md start:example",
+    "build": "run-s build:lib build:md build:example",
+    "init-example": "modules-dev-libs-init",
+    "build:md": "npx @kne/md-doc",
+    "start:md": "npx @kne/md-doc --watch",
+    "build:locale": "microbundle src/locale/*.js -o dist/locale --no-compress --format modern,cjs ",
+    "build:lib-main": "microbundle --no-compress --format modern,cjs --jsxImportSource react --jsx React.createElement --jsxFragment React.Fragment",
+    "build:lib": "run-s build:locale build:lib-main",
+    "start:lib": "microbundle watch --no-compress --format modern,cjs --jsxImportSource react --jsx React.createElement --jsxFragment React.Fragment",
+    "build:example": "cd example && npm run build",
+    "start:example": "cd example && npm run start",
+    "test:build": "run-s build",
+    "test:lint": "eslint .",
+    "test:unit": "cross-env CI=1 react-scripts test --env=jsdom",
+    "test:watch": "react-scripts test --env=jsdom",
+    "prettier": "prettier --config .prettierrc --write '{src/**/*,index,prompts}.{js,jsx,ts,tsx,json,css,scss}'",
+    "lint-staged": "npx lint-staged"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --config .prettierrc --write",
+      "git add"
+    ]
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kne-union/react-pdf-sign.git"
+  },
+  "keywords": [],
+  "author": "linzp",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kne-union/react-pdf-sign/issues"
+  },
+  "homepage": "https://github.com/kne-union/react-pdf-sign",
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "peerDependencies": {
+    "@ant-design/icons": ">=5",
+    "antd": ">=5",
+    "react": "*",
+    "react-dom": "*"
+  },
+  "devDependencies": {
+    "@ant-design/icons": "^6.1.0",
+    "@kne/microbundle": "^0.15.5",
+    "@kne/modules-dev": "^2.0.33",
+    "cross-env": "^7.0.3",
+    "husky": "^9.0.11",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^3.2.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "dependencies": {
+    "@kne/global-context": "^1.2.0",
+    "@kne/react-intl": "^0.1.9",
+    "@kne/use-control-value": "^0.1.9",
+    "@kne/use-ref-callback": "^0.1.2",
+    "@kne/use-resize": "^0.1.1",
+    "classnames": "^2.5.1",
+    "konva": "^10.0.12",
+    "pdf-lib": "^1.17.1",
+    "react-konva": "^18.2.14",
+    "react-pdf": "^10.2.0",
+    "react-signature-canvas": "^1.1.0-alpha.2",
+    "use-image": "^1.1.4"
+  }
+}

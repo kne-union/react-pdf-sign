@@ -1,0 +1,104 @@
+{
+  "isFull": false,
+  "list": [
+    {
+      "title": "完整签名流程",
+      "description": "演示PDF上传、手写签名创建和签名PDF生成的完整工作流程",
+      "code": "./base.js",
+      "scope": [
+        {
+          "name": "_ReactPdfSign",
+          "packageName": "@kne/current-lib_react-pdf-sign",
+          "importStatement": "import * as _ReactPdfSign from \"@kne/react-pdf-sign\""
+        },
+        {
+          "name": "antd",
+          "packageName": "antd"
+        },
+        {
+          "packageName": "@kne/current-lib_react-pdf-sign/dist/index.css"
+        }
+      ]
+    },
+    {
+      "title": "签名定位层",
+      "description": "展示独立的签名定位组件，支持拖拽和缩放调整签名位置",
+      "code": "./location-layer.js",
+      "scope": [
+        {
+          "name": "_ReactPdfSign",
+          "packageName": "@kne/current-lib_react-pdf-sign",
+          "importStatement": "import * as _ReactPdfSign from \"@kne/react-pdf-sign\""
+        },
+        {
+          "packageName": "@kne/current-lib_react-pdf-sign/dist/index.css"
+        }
+      ]
+    },
+    {
+      "title": "PDF查看器",
+      "description": "基础的PDF文档查看器，支持页面切换和缩放显示",
+      "code": "./pdf-viewer.js",
+      "scope": [
+        {
+          "name": "_ReactPdfSign",
+          "packageName": "@kne/current-lib_react-pdf-sign",
+          "importStatement": "import * as _ReactPdfSign from \"@kne/react-pdf-sign\""
+        },
+        {
+          "name": "_examplePdf",
+          "packageName": "./doc/example.pdf"
+        },
+        {
+          "packageName": "@kne/current-lib_react-pdf-sign/dist/index.css"
+        }
+      ]
+    },
+    {
+      "title": "PDF签名组件",
+      "description": "演示PDF签名组件的API使用，包括位置获取、设置和签名文件生成",
+      "code": "./pdf-sign.js",
+      "scope": [
+        {
+          "name": "_ReactPdfSign",
+          "packageName": "@kne/current-lib_react-pdf-sign",
+          "importStatement": "import * as _ReactPdfSign from \"@kne/react-pdf-sign\""
+        },
+        {
+          "name": "_examplePdf",
+          "packageName": "./doc/example.pdf"
+        },
+        {
+          "name": "_signature",
+          "packageName": "./doc/signature.png"
+        },
+        {
+          "name": "antd",
+          "packageName": "antd"
+        },
+        {
+          "packageName": "@kne/current-lib_react-pdf-sign/dist/index.css"
+        }
+      ]
+    },
+    {
+      "title": "手写签名画板",
+      "description": "展示useSignature Hook的使用，打开手写签名模态框",
+      "code": "./use-signature.js",
+      "scope": [
+        {
+          "name": "_ReactPdfSign",
+          "packageName": "@kne/current-lib_react-pdf-sign",
+          "importStatement": "import * as _ReactPdfSign from \"@kne/react-pdf-sign\""
+        },
+        {
+          "name": "antd",
+          "packageName": "antd"
+        },
+        {
+          "packageName": "@kne/current-lib_react-pdf-sign/dist/index.css"
+        }
+      ]
+    }
+  ]
+}

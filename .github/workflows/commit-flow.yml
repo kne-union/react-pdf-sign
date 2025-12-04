@@ -1,0 +1,11 @@
+name: Commit Flow
+on:
+  pull_request:
+    branches: [release]
+    types:
+      - closed
+jobs:
+  complete-issue:
+    if: github.event.pull_request.merged == true
+    uses: kne-union/actions/.github/workflows/complete-issue-workflow.yml@master
+    secrets: inherit

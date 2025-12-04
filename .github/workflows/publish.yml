@@ -1,0 +1,14 @@
+name: Publish Npm Package
+on:
+  pull_request:
+    branches: [master]
+    types:
+      - closed
+jobs:
+  libs-npm:
+    if: github.event.pull_request.merged == true
+    uses: kne-union/actions/.github/workflows/publish-libs-workflow.yml@master
+    secrets: inherit
+    with:
+      package_name: '@kne/react-pdf-sign'
+      example_package_name: '@kne-components/react-pdf-sign'

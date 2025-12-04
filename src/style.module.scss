@@ -1,0 +1,72 @@
+.pdf-view-container {
+  margin: 0 auto;
+  position: relative;
+  max-width: 1200px;
+  width: 100%;
+
+  :global(.react-pdf__Page__canvas),
+  :global(.textLayer) {
+    margin: 0 auto;
+  }
+}
+
+.pdf-view {
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.12),
+    0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.pdf-view-children {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+
+.pdf-view-page-control-left,
+.pdf-view-page-control-right {
+  position: absolute;
+  font-size: 30px;
+  top: calc(50% - 19px);
+  z-index: 10;
+  padding: 8px;
+  cursor: pointer;
+  opacity: 0.3;
+}
+
+.pdf-view-page-control-current {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #666666;
+  background-color: rgba(255, 255, 255, 0.5);
+  text-shadow:
+    0 0 8px white,
+    0 0 8px white;
+  border-radius: 4px;
+}
+
+.pdf-view-page-control-right {
+  right: 0;
+}
+
+.signature-container {
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+}
+
+.signature-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.signature-modal {
+  :global {
+    .ant-modal-confirm-paragraph {
+      max-width: unset;
+    }
+  }
+}
