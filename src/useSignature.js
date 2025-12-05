@@ -4,6 +4,7 @@ import classnames from 'classnames';
 import { useRef } from 'react';
 import withLocale from './withLocale';
 import { useIntl } from '@kne/react-intl';
+import { snapdom } from '@zumer/snapdom';
 import style from './style.module.scss';
 
 const dataURLtoBlob = dataURL => {
@@ -22,10 +23,11 @@ const dataURLtoBlob = dataURL => {
   });
 };
 
-const Signature = withLocale(({ onClose, onSuccess, filename, width, height }) => {
+const Signature = withLocale(({ onClose, onSuccess, filename, width, height, mask = null }) => {
   const { formatMessage } = useIntl();
   const { message } = App.useApp();
   const signatureCanvasRef = useRef(null);
+  const maskRef = useRef(null);
   return (
     <Flex vertical gap={12} className={classnames(style['signature-modal-content'], 'signature-modal-content')}>
       <div
@@ -35,6 +37,9 @@ const Signature = withLocale(({ onClose, onSuccess, filename, width, height }) =
           height: `${Math.round((height * 368) / width)}px`
         }}
       >
+        <div className={classnames(style['signature-mask'], 'signature-mask')} ref={maskRef}>
+          {mask}
+        </div>
         <SignatureCanvas ref={signatureCanvasRef} canvasProps={{ className: classnames(style['signature-canvas'], 'signature-canvas') }} />
       </div>
       <Flex justify="flex-end" align="center" gap={10}>
@@ -47,12 +52,33 @@ const Signature = withLocale(({ onClose, onSuccess, filename, width, height }) =
         </Button>
         <Button
           type="primary"
-          onClick={() => {
+          onClick={async () => {
             if (signatureCanvasRef.current.isEmpty()) {
               message.error(formatMessage({ id: 'signatureEmptyError' }));
               return;
             }
-            const file = new window.File([dataURLtoBlob(signatureCanvasRef.current.toDataURL('image/png'))], filename, { type: 'image/png' });
+
+            let result = signatureCanvasRef.current.toDataURL('image/png');
+
+            if (mask) {
+              const maskPng = await snapdom.toPng(maskRef.current, {
+                scale: 2
+              });
+              const canvas = document.createElement('canvas');
+              canvas.width = width * 2;
+              canvas.height = height * 2;
+              const ctx = canvas.getContext('2d');
+              ctx.drawImage(maskPng, 0, 0, canvas.width, canvas.height);
+              const resultImage = new Image();
+              resultImage.src = result;
+              await new Promise(resolve => {
+                resultImage.onload = resolve;
+              });
+              ctx.drawImage(resultImage, 0, 0, canvas.width, canvas.height);
+              result = canvas.toDataURL('image/png');
+            }
+
+            const file = new window.File([dataURLtoBlob(result)], filename, { type: 'image/png' });
             onClose();
             onSuccess(file);
           }}
@@ -69,19 +95,10 @@ const Title = withLocale(() => {
   return <span>{formatMessage({ id: 'signatureDefaultTitle' })}</span>;
 });
 
-const useSignature = props => {
-  const { width, height } = Object.assign(
-    {},
-    {
-      width: 200,
-      height: 50
-    },
-    props
-  );
-  const { modal, message } = App.useApp();
-  const signatureCanvasRef = useRef(null);
+const useSignature = () => {
+  const { modal } = App.useApp();
   return props => {
-    const { filename = 'signature.png', onSuccess, ...modalProps } = Object.assign({}, props);
+    const { filename = 'signature.png', onSuccess, width = 200, height = 80, mask, ...modalProps } = Object.assign({}, props);
     const modalApi = modal.info(
       Object.assign(
         {},
@@ -100,6 +117,7 @@ const useSignature = props => {
             <Signature
               width={width}
               height={height}
+              mask={mask}
               filename={filename}
               onSuccess={onSuccess}
               onClose={() => {

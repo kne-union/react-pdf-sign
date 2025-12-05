@@ -22,7 +22,15 @@ const BaseExample = () => {
         </Button>
         <Button
           onClick={() => {
+            const { size } = ref.current.getLocation();
             signatureModal({
+              mask: (
+                <Flex justify="flex-end" align="flex-end" style={{ height: '100%', width: '100%', padding: '10px', boxSizing: 'border-box' }}>
+                  签字日期: {new Date().toLocaleDateString()}
+                </Flex>
+              ),
+              width: size.width,
+              height: size.height,
               onSuccess: file => {
                 setSign(URL.createObjectURL(file));
               }

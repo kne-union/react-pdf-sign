@@ -2,14 +2,17 @@
 
 主要的 PDF 签名组件，集成了 PDF 查看器和签名定位功能。
 
-| 属性          | 类型     | 默认值       | 说明             |
-|-------------|--------|-----------|----------------|
-| url         | string | -         | PDF 文件的 URL 地址 |
-| signature   | string | -         | 签名图片的 URL 地址   |
-| width       | number | 200       | 签名区域的宽度        |
-| height      | number | 50        | 签名区域的高度        |
-| padding     | number | 8         | 签名区域变换器的内边距    |
-| placeholder | string | '拖拽到签名位置' | 签名区域的占位文本      |
+| 属性             | 类型       | 默认值              | 说明                |
+|----------------|----------|-------------------|-------------------|
+| url            | string   | -                 | PDF 文件的 URL 地址    |
+| signature      | string   | -                 | 签名图片的 URL 地址      |
+| width          | number   | 200               | 签名区域的宽度           |
+| height         | number   | 50                | 签名区域的高度           |
+| padding        | number   | 8                 | 签名区域变换器的内边距       |
+| placeholder    | string   | '拖拽到签名位置'        | 签名区域的占位文本         |
+| filename       | string   | 'signed-document.pdf' | 生成签名PDF的文件名       |
+| defaultLocation | object   | -                 | 默认签名位置信息          |
+| onChange       | function | -                 | 签名位置变化回调函数       |
 
 #### 实例方法
 
@@ -69,7 +72,8 @@ PDF 文档查看器组件，提供 PDF 页面浏览功能。
 |------------|----------|-----------------|------------|
 | filename   | string   | 'signature.png' | 签名文件名      |
 | width      | number   | 200             | 签名画板宽度     |
-| height     | number   | 50              | 签名画板高度     |
+| height     | number   | 80              | 签名画板高度     |
+| mask       | ReactNode | -               | 签名画板叠加内容   |
 | onSuccess  | function | -               | 签名完成回调     |
 | modalProps | object   | -               | Modal 组件属性 |
 
@@ -78,4 +82,4 @@ PDF 文档查看器组件，提供 PDF 页面浏览功能。
 | 参数     | 类型     | 默认值 | 说明       |
 |--------|--------|-----|----------|
 | width  | number | 200 | 默认签名画板宽度 |
-| height | number | 50  | 默认签名画板高度 |
+| height | number | 80  | 默认签名画板高度 |
