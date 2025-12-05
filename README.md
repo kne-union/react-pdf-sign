@@ -73,24 +73,26 @@ const BaseExample = () => {
             }}
           />
         </Button>
-        <Button
-          onClick={() => {
-            const { size } = ref.current.getLocation();
-            signatureModal({
-              mask: (
-                <Flex justify="flex-end" align="flex-end" style={{ height: '100%', width: '100%', padding: '10px', boxSizing: 'border-box' }}>
-                  签字日期: {new Date().toLocaleDateString()}
-                </Flex>
-              ),
-              width: size.width,
-              height: size.height,
-              onSuccess: file => {
-                setSign(URL.createObjectURL(file));
-              }
-            });
-          }}>
-          添加签名
-        </Button>
+        {pdfFile && (
+          <Button
+            onClick={() => {
+              const { size } = ref.current.getLocation();
+              signatureModal({
+                mask: (
+                  <Flex justify="flex-end" align="flex-end" style={{ height: '100%', width: '100%', padding: '10px', boxSizing: 'border-box' }}>
+                    签字日期: {new Date().toLocaleDateString()}
+                  </Flex>
+                ),
+                width: size.width,
+                height: size.height,
+                onSuccess: file => {
+                  setSign(URL.createObjectURL(file));
+                }
+              });
+            }}>
+            添加签名
+          </Button>
+        )}
         {pdfFile && sign && (
           <Button
             onClick={async () => {
@@ -187,15 +189,15 @@ const BaseExample = () => {
             onClick={() => {
               ref.current.setLocation({
                 size: {
-                  width: 200,
-                  height: 50,
-                  x: 240,
-                  y: 47
+                  width: 390,
+                  height: 156,
+                  x: 163,
+                  y: 8
                 },
-                scaleX: 1,
-                scaleY: 1,
-                x: 240,
-                y: 47
+                scaleX: 1.95,
+                scaleY: 1.95,
+                x: 163,
+                y: 8
               });
             }}>
             设置签名位置
