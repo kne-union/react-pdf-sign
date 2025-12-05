@@ -47,8 +47,8 @@ const LocationLayer = withLocale(p => {
           y: Math.round((stageHeight - height) / 2)
         }
       });
-      setIsInit(true);
     }
+    setIsInit(true);
   });
 
   const themeColor = useMemo(() => {
