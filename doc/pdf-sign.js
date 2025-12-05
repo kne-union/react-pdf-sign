@@ -26,15 +26,15 @@ const BaseExample = () => {
             onClick={() => {
               ref.current.setLocation({
                 size: {
-                  width: 200,
-                  height: 50,
-                  x: 240,
-                  y: 47
+                  width: 390,
+                  height: 156,
+                  x: 163,
+                  y: 8
                 },
-                scaleX: 1,
-                scaleY: 1,
-                x: 240,
-                y: 47
+                scaleX: 1.95,
+                scaleY: 1.95,
+                x: 163,
+                y: 8
               });
             }}>
             设置签名位置

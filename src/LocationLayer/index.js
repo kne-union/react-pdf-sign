@@ -14,7 +14,6 @@ const LocationLayer = withLocale(p => {
   const [signatureImage] = useImage(signature);
   const groupRef = useRef();
   const signRef = useRef();
-  const targetRef = useRef();
   const transformerRef = useRef();
   const computedSignLocation = () => {
     const absolutePosition = signRef.current.absolutePosition();
@@ -26,8 +25,8 @@ const LocationLayer = withLocale(p => {
         x: Math.round(absolutePosition.x),
         y: Math.round(absolutePosition.y)
       },
-      scaleX: Number(transformerRef.current.attrs.scaleX.toFixed(2)),
-      scaleY: Number(transformerRef.current.attrs.scaleY.toFixed(2)),
+      scaleX: Number(groupRef.current.attrs.scaleX.toFixed(2)),
+      scaleY: Number(groupRef.current.attrs.scaleY.toFixed(2)),
       x: Math.round(groupRef.current.attrs.x),
       y: Math.round(groupRef.current.attrs.y)
     });
@@ -66,7 +65,7 @@ const LocationLayer = withLocale(p => {
 
   useEffect(() => {
     if (isInit) {
-      transformerRef.current.nodes([targetRef.current]);
+      transformerRef.current.nodes([groupRef.current]);
     }
   }, [isInit]);
   if (!(isInit && value)) {
@@ -76,25 +75,11 @@ const LocationLayer = withLocale(p => {
   return (
     <Stage width={stageWidth} height={stageHeight}>
       <Layer>
-        <Group x={value.x} y={value.y} draggable ref={groupRef} onDragEnd={computedSignLocation}>
-          <Group ref={targetRef} onTransformEnd={computedSignLocation}>
-            {signatureImage ? <Image width={width} height={height} image={signatureImage} cornerRadius={8} ref={signRef} /> : <Rect width={width} height={height} fill="#f0f0f0" cornerRadius={8} ref={signRef} />}
-          </Group>
+        <Group x={value.x} y={value.y} draggable ref={groupRef} onDragEnd={computedSignLocation} scaleX={value.scaleX} scaleY={value.scaleY} onTransformEnd={computedSignLocation}>
+          {signatureImage ? <Image width={width} height={height} image={signatureImage} cornerRadius={8} ref={signRef} /> : <Rect width={width} height={height} fill="#f0f0f0" cornerRadius={8} ref={signRef} />}
           <Text text={signatureImage ? '' : placeholder} fontSize={16} fill="#666666" fontFamily="Arial" align="center" verticalAlign="middle" width={width} height={height} />
         </Group>
-        <Transformer
-          scaleX={value.scaleX}
-          scaleY={value.scaleY}
-          centeredScaling
-          ref={transformerRef}
-          keepRatio={true}
-          flipEnabled={false}
-          rotateEnabled={false}
-          borderStroke={themeColor}
-          rotateAnchorStroke={themeColor}
-          anchorStroke={themeColor}
-          padding={padding}
-        />
+        <Transformer ref={transformerRef} keepRatio={true} flipEnabled={false} rotateEnabled={false} borderStroke={themeColor} rotateAnchorStroke={themeColor} anchorStroke={themeColor} padding={padding} />
       </Layer>
     </Stage>
   );
