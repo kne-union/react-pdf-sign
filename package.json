@@ -1,6 +1,6 @@
 {
   "name": "@kne/react-pdf-sign",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "这是一个功能强大的 React PDF 签名组件库，专为需要在 PDF 文档上添加电子签名的应用场景而设计。该组件库提供了灵活的签名解决方案，支持即时签名添加和预定义签名区域两种模式",
   "syntax": {
     "esmodules": true

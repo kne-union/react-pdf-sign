@@ -39,6 +39,9 @@ const BaseExample = () => {
             }}>
             设置签名位置
           </Button>
+          <Button onClick={()=>{
+            ref.current.setLocation({});
+          }}>恢复到默认位置</Button>
           <Button
             onClick={() => {
               const pdfSignature = ref.current.getPdfSignature();
