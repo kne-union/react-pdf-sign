@@ -72,7 +72,22 @@ const PDFSign = withLocale(
     return (
       <PDFViewer {...props} url={url}>
         {({ size, currentPage }) => {
-          return <PDFSignInner ref={ref} size={size} currentPage={currentPage} url={url} filename={filename} width={width} height={height} padding={padding} placeholder={placeholder} signature={signature} onChange={onChange} />;
+          return (
+            <PDFSignInner
+              ref={ref}
+              size={size}
+              currentPage={currentPage}
+              url={url}
+              filename={filename}
+              defaultLocation={defaultLocation}
+              width={width}
+              height={height}
+              padding={padding}
+              placeholder={placeholder}
+              signature={signature}
+              onChange={onChange}
+            />
+          );
         }}
       </PDFViewer>
     );
