@@ -1,7 +1,7 @@
 import SignatureCanvas from 'react-signature-canvas';
 import { App, Button, Flex } from 'antd';
 import classnames from 'classnames';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import withLocale from './withLocale';
 import { useIntl } from '@kne/react-intl';
 import { snapdom } from '@zumer/snapdom';
@@ -28,12 +28,13 @@ const Signature = withLocale(({ onClose, onSuccess, filename, width, height, mas
   const { message } = App.useApp();
   const signatureCanvasRef = useRef(null);
   const maskRef = useRef(null);
+  const [loading, setLoading] = useState(false);
   return (
     <Flex vertical gap={12} className={classnames(style['signature-modal-content'], 'signature-modal-content')}>
       <div
         className={classnames(style['signature-container'], 'signature-container')}
         style={{
-          width: '368px',
+          width: '100%',
           height: `${Math.round((height * 368) / width)}px`
         }}
       >
@@ -45,42 +46,54 @@ const Signature = withLocale(({ onClose, onSuccess, filename, width, height, mas
       <Flex justify="flex-end" align="center" gap={10}>
         <Button
           onClick={() => {
-            onClose();
+            signatureCanvasRef.current.clear();
           }}
         >
-          {formatMessage({ id: 'signatureCancelText' })}
+          {formatMessage({ id: 'signatureCleanText' })}
         </Button>
         <Button
+          loading={loading}
           type="primary"
           onClick={async () => {
-            if (signatureCanvasRef.current.isEmpty()) {
-              message.error(formatMessage({ id: 'signatureEmptyError' }));
-              return;
+            setLoading(true);
+            try {
+              if (signatureCanvasRef.current.isEmpty()) {
+                message.error(formatMessage({ id: 'signatureEmptyError' }));
+                return;
+              }
+
+              let result = signatureCanvasRef.current.toDataURL('image/png');
+
+              if (mask) {
+                const maskPng = await snapdom.toPng(maskRef.current, {
+                  scale: 2
+                });
+                const canvas = document.createElement('canvas');
+                canvas.width = width * 2;
+                canvas.height = height * 2;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(maskPng, 0, 0, canvas.width, canvas.height);
+                const resultImage = new Image();
+                resultImage.src = result;
+                await new Promise(resolve => {
+                  resultImage.onload = resolve;
+                });
+                ctx.drawImage(resultImage, 0, 0, canvas.width, canvas.height);
+                result = canvas.toDataURL('image/png');
+              }
+
+              const file = new window.File([dataURLtoBlob(result)], filename, { type: 'image/png' });
+
+              const successResult = onSuccess && (await onSuccess(file));
+              setLoading(false);
+              if (successResult === false) {
+                return;
+              }
+              onClose();
+            } catch (e) {
+              message.error(e.message);
+              setLoading(false);
             }
-
-            let result = signatureCanvasRef.current.toDataURL('image/png');
-
-            if (mask) {
-              const maskPng = await snapdom.toPng(maskRef.current, {
-                scale: 2
-              });
-              const canvas = document.createElement('canvas');
-              canvas.width = width * 2;
-              canvas.height = height * 2;
-              const ctx = canvas.getContext('2d');
-              ctx.drawImage(maskPng, 0, 0, canvas.width, canvas.height);
-              const resultImage = new Image();
-              resultImage.src = result;
-              await new Promise(resolve => {
-                resultImage.onload = resolve;
-              });
-              ctx.drawImage(resultImage, 0, 0, canvas.width, canvas.height);
-              result = canvas.toDataURL('image/png');
-            }
-
-            const file = new window.File([dataURLtoBlob(result)], filename, { type: 'image/png' });
-            onClose();
-            onSuccess(file);
           }}
         >
           {formatMessage({ id: 'signatureConfirmText' })}
@@ -106,6 +119,7 @@ const useSignature = () => {
           title: <Title />,
           icon: null,
           footer: null,
+          closable: true,
           wrapClassName: style['signature-modal'],
           classNames: {
             content: style['signature-modal']
