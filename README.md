@@ -20,13 +20,13 @@ npm i --save @kne/react-pdf-sign
 
 ## 核心特性
 
-**直观的签名体验** - 提供手写签名画板，用户可以通过鼠标或触摸设备自然地绘制签名，签名支持实时预览和调整。
+**直观的签名体验** - 提供手写签名画板，用户可以通过鼠标或触摸设备自然地绘制签名，签名支持实时预览和调整。支持在签名画板上叠加自定义内容，如日期、文字等。
 
 **灵活的定位控制** - 签名区域可以在 PDF 页面上自由拖拽、缩放和精确定位，支持保持比例缩放，确保签名的视觉效果。
 
 **完整的 PDF 操作** - 基于 pdf-lib 和 react-pdf，支持多页 PDF 文档的浏览、签名定位和最终签名文件的生成。
 
-**组件化设计** - 提供多个独立组件（PDFSign、PDFViewer、LocationLayer、useSignature），开发者可以根据需求灵活组合使用。
+**组件化设计** - 提供多个独立组件（PDFSign、PDFViewer、LocationLayer、useSignature），开发者可以根据需求灵活组合使用。支持默认签名位置设置和位置变化回调，便于集成到现有业务流程。
 
 **国际化支持** - 内置中英文语言包，支持多语言切换，适合国际化应用。
 
@@ -40,7 +40,7 @@ npm i --save @kne/react-pdf-sign
 - 证书颁发系统
 - 法律文件签署
 
-该组件库简化了 PDF 签名的复杂实现，开发者只需要几行代码就能集成完整的签名功能，大大提升了开发效率。
+该组件库简化了 PDF 签名的复杂实现，开发者只需要几行代码就能集成完整的签名功能，大大提升了开发效率。新增的签名叠加功能让签名更加丰富和个性化，满足各种业务场景需求。
 
 ### 示例
 
@@ -75,7 +75,15 @@ const BaseExample = () => {
         </Button>
         <Button
           onClick={() => {
+            const { size } = ref.current.getLocation();
             signatureModal({
+              mask: (
+                <Flex justify="flex-end" align="flex-end" style={{ height: '100%', width: '100%', padding: '10px', boxSizing: 'border-box' }}>
+                  签字日期: {new Date().toLocaleDateString()}
+                </Flex>
+              ),
+              width: size.width,
+              height: size.height,
               onSuccess: file => {
                 setSign(URL.createObjectURL(file));
               }
@@ -236,23 +244,46 @@ render(<BaseExample />);
 
 ```jsx
 const { useSignature } = _ReactPdfSign;
-const { Button } = antd;
+const { Button, Flex } = antd;
+
+const { useState } = React;
 
 const BaseExample = () => {
+  const [result, setResult] = useState(null);
   const modal = useSignature();
   return (
-    <div>
-      <Button
-        onClick={() => {
-          modal({
-            onSuccess: file => {
-              console.log(file);
-            }
-          });
-        }}>
-        签名
-      </Button>
-    </div>
+    <Flex vertical gap={12}>
+      {result && <img src={result} alt="result" style={{ width: '300px' }} />}
+      <Flex gap={8}>
+        <Button
+          onClick={() => {
+            modal({
+              onSuccess: file => {
+                console.log(file);
+                setResult(URL.createObjectURL(file));
+              }
+            });
+          }}>
+          签名
+        </Button>
+        <Button
+          onClick={() => {
+            modal({
+              mask: (
+                <Flex justify="flex-end" align="flex-end" style={{ height: '100%', width: '100%', padding: '10px', boxSizing: 'border-box' }}>
+                  签字日期: {new Date().toLocaleDateString()}
+                </Flex>
+              ),
+              onSuccess: file => {
+                console.log(file);
+                setResult(URL.createObjectURL(file));
+              }
+            });
+          }}>
+          带有日期模版的签名
+        </Button>
+      </Flex>
+    </Flex>
   );
 };
 
@@ -267,14 +298,17 @@ render(<BaseExample />);
 
 主要的 PDF 签名组件，集成了 PDF 查看器和签名定位功能。
 
-| 属性          | 类型     | 默认值       | 说明             |
-|-------------|--------|-----------|----------------|
-| url         | string | -         | PDF 文件的 URL 地址 |
-| signature   | string | -         | 签名图片的 URL 地址   |
-| width       | number | 200       | 签名区域的宽度        |
-| height      | number | 50        | 签名区域的高度        |
-| padding     | number | 8         | 签名区域变换器的内边距    |
-| placeholder | string | '拖拽到签名位置' | 签名区域的占位文本      |
+| 属性             | 类型       | 默认值              | 说明                |
+|----------------|----------|-------------------|-------------------|
+| url            | string   | -                 | PDF 文件的 URL 地址    |
+| signature      | string   | -                 | 签名图片的 URL 地址      |
+| width          | number   | 200               | 签名区域的宽度           |
+| height         | number   | 50                | 签名区域的高度           |
+| padding        | number   | 8                 | 签名区域变换器的内边距       |
+| placeholder    | string   | '拖拽到签名位置'        | 签名区域的占位文本         |
+| filename       | string   | 'signed-document.pdf' | 生成签名PDF的文件名       |
+| defaultLocation | object   | -                 | 默认签名位置信息          |
+| onChange       | function | -                 | 签名位置变化回调函数       |
 
 #### 实例方法
 
@@ -334,7 +368,8 @@ PDF 文档查看器组件，提供 PDF 页面浏览功能。
 |------------|----------|-----------------|------------|
 | filename   | string   | 'signature.png' | 签名文件名      |
 | width      | number   | 200             | 签名画板宽度     |
-| height     | number   | 50              | 签名画板高度     |
+| height     | number   | 80              | 签名画板高度     |
+| mask       | ReactNode | -               | 签名画板叠加内容   |
 | onSuccess  | function | -               | 签名完成回调     |
 | modalProps | object   | -               | Modal 组件属性 |
 
@@ -343,4 +378,4 @@ PDF 文档查看器组件，提供 PDF 页面浏览功能。
 | 参数     | 类型     | 默认值 | 说明       |
 |--------|--------|-----|----------|
 | width  | number | 200 | 默认签名画板宽度 |
-| height | number | 50  | 默认签名画板高度 |
+| height | number | 80  | 默认签名画板高度 |

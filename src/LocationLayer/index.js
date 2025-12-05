@@ -8,12 +8,13 @@ import { useIntl } from '@kne/react-intl';
 
 const LocationLayer = withLocale(p => {
   const { formatMessage } = useIntl();
-  const { width = 200, height = 50, padding = 8, stageWidth, stageHeight, placeholder = formatMessage({ id: 'locationLayerPlaceholder' }), signature, ...props } = p;
+  const { width = 200, height = 80, padding = 8, stageWidth, stageHeight, placeholder = formatMessage({ id: 'locationLayerPlaceholder' }), signature, ...props } = p;
   const [value, setValue] = useControlValue(props);
   const [isInit, setIsInit] = useState(false);
   const [signatureImage] = useImage(signature);
   const groupRef = useRef();
   const signRef = useRef();
+  const targetRef = useRef();
   const transformerRef = useRef();
   const computedSignLocation = () => {
     const absolutePosition = signRef.current.absolutePosition();
@@ -65,7 +66,7 @@ const LocationLayer = withLocale(p => {
 
   useEffect(() => {
     if (isInit) {
-      transformerRef.current.nodes([groupRef.current]);
+      transformerRef.current.nodes([targetRef.current]);
     }
   }, [isInit]);
   if (!(isInit && value)) {
@@ -75,8 +76,10 @@ const LocationLayer = withLocale(p => {
   return (
     <Stage width={stageWidth} height={stageHeight}>
       <Layer>
-        <Group x={value.x} y={value.y} draggable ref={groupRef} onDragEnd={computedSignLocation} onTransformEnd={computedSignLocation}>
-          {signatureImage ? <Image width={width} height={height} image={signatureImage} cornerRadius={8} ref={signRef} /> : <Rect width={width} height={height} fill="#f0f0f0" cornerRadius={8} ref={signRef} />}
+        <Group x={value.x} y={value.y} draggable ref={groupRef} onDragEnd={computedSignLocation}>
+          <Group ref={targetRef} onTransformEnd={computedSignLocation}>
+            {signatureImage ? <Image width={width} height={height} image={signatureImage} cornerRadius={8} ref={signRef} /> : <Rect width={width} height={height} fill="#f0f0f0" cornerRadius={8} ref={signRef} />}
+          </Group>
           <Text text={signatureImage ? '' : placeholder} fontSize={16} fill="#666666" fontFamily="Arial" align="center" verticalAlign="middle" width={width} height={height} />
         </Group>
         <Transformer
@@ -91,7 +94,6 @@ const LocationLayer = withLocale(p => {
           rotateAnchorStroke={themeColor}
           anchorStroke={themeColor}
           padding={padding}
-          enabledAnchors={['top-left', 'top-right', 'bottom-left', 'bottom-right']}
         />
       </Layer>
     </Stage>

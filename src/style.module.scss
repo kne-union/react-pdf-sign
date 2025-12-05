@@ -56,6 +56,7 @@
 .signature-container {
   border: 1px solid #cccccc;
   border-radius: 4px;
+  position: relative;
 }
 
 .signature-canvas {
@@ -69,4 +70,13 @@
       max-width: unset;
     }
   }
+}
+
+.signature-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
 }
