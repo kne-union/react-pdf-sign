@@ -4,6 +4,7 @@ const locale = {
   signatureDefaultTitle: 'Signature',
   signatureConfirmText: 'Confirm',
   signatureCancelText: 'Cancel',
+  signatureCleanText: 'Clean',
   signatureEmptyError: 'Signature content cannot be empty',
   signatureSuccess: 'Signature Success'
 };
