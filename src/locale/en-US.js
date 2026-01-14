@@ -6,7 +6,8 @@ const locale = {
   signatureCancelText: 'Cancel',
   signatureCleanText: 'Clean',
   signatureEmptyError: 'Signature content cannot be empty',
-  signatureSuccess: 'Signature Success'
+  signatureSuccess: 'Signature Success',
+  signatureAdd: 'Please add signature'
 };
 
 export default locale;
