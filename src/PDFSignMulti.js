@@ -1,10 +1,12 @@
-import { forwardRef, useState, useImperativeHandle, useMemo } from 'react';
+import { forwardRef, useState, useImperativeHandle, useMemo, useEffect } from 'react';
+import omit from 'lodash/omit';
 import PDFViewer from './PDFViewer';
 import { LocationGroup } from './LocationLayer';
 import withLocale from './withLocale';
 import { useIntl } from '@kne/react-intl';
 import { signMultiPdfFile } from './signPdfFile';
 import computedPDFSignLocation from './computedPDFSignLocation';
+import getInitLocation from './getInitLocation';
 
 const PDFSignMultiInner = forwardRef(({ size, currentPage, placeholder, url, width = 200, height = 80, padding, filename = 'signed-document.pdf', defaultSignatureList, isEdit, onSign, onChange }, ref) => {
   const [signatureList, setSignatureList] = useState(defaultSignatureList || []);
@@ -28,8 +30,16 @@ const PDFSignMultiInner = forwardRef(({ size, currentPage, placeholder, url, wid
       });
   }, [signatureList, size]);
 
+  useEffect(() => {
+    onChange && onChange(signatureList);
+  }, [signatureList]);
+
   useImperativeHandle(ref, () => ({
-    getSignatureList: () => signatureList,
+    getSignatureList: () => {
+      return signatureList.map(item => {
+        return omit(item, ['signature']);
+      });
+    },
     setSignatureList: value => setSignatureList(value),
     getPdfSignatureList: () => {
       return pdfSignatureList;
@@ -46,7 +56,7 @@ const PDFSignMultiInner = forwardRef(({ size, currentPage, placeholder, url, wid
     },
     addSignLocation: () => {
       setSignatureList(signatureList => {
-        return [...signatureList, { page: currentPage }];
+        return [...signatureList, Object.assign({}, getInitLocation({ width, height, stageWidth: size.width, stageHeight: size.height }), { page: currentPage })];
       });
     }
   }));
