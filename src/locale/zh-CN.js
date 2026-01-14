@@ -6,7 +6,8 @@ const locale = {
   signatureCancelText: '取消',
   signatureCleanText: '清空',
   signatureEmptyError: '签名内容不能为空',
-  signatureSuccess: '签名成功'
+  signatureSuccess: '签名成功',
+  signatureAdd: '请添加签名'
 };
 
 export default locale;

@@ -21,6 +21,25 @@
       ]
     },
     {
+      "title": "多位置PDF签名",
+      "description": "演示在同一PDF文档中添加多个签名位置的完整流程：1. 上传PDF文档；2. 在编辑模式下点击'添加签名位置'按钮为不同页面添加签名区域；3. 切换至非编辑模式进行签名；4. 完成所有签名后点击'生成签名PDF'导出已签名的文档",
+      "code": "./pdf-multi-sign.js",
+      "scope": [
+        {
+          "name": "_ReactPdfSign",
+          "packageName": "@kne/current-lib_react-pdf-sign",
+          "importStatement": "import * as _ReactPdfSign from \"@kne/react-pdf-sign\""
+        },
+        {
+          "name": "antd",
+          "packageName": "antd"
+        },
+        {
+          "packageName": "@kne/current-lib_react-pdf-sign/dist/index.css"
+        }
+      ]
+    },
+    {
       "title": "签名定位层",
       "description": "展示独立的签名定位组件，支持拖拽和缩放调整签名位置",
       "code": "./location-layer.js",
@@ -29,6 +48,10 @@
           "name": "_ReactPdfSign",
           "packageName": "@kne/current-lib_react-pdf-sign",
           "importStatement": "import * as _ReactPdfSign from \"@kne/react-pdf-sign\""
+        },
+        {
+          "name": "antd",
+          "packageName": "antd"
         },
         {
           "packageName": "@kne/current-lib_react-pdf-sign/dist/index.css"
