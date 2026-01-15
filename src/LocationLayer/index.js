@@ -133,7 +133,6 @@ export const LocationGroup = ({ stageWidth, stageHeight, isEdit = true, onClick,
   );
 
   const [active, setActive] = useState(0);
-
   return (
     <Stage width={stageWidth} height={stageHeight}>
       {value.map((item, index) => {

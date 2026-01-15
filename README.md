@@ -133,7 +133,9 @@ const { Flex, Button, Switch, App } = antd;
 const BaseExample = () => {
   const [pdfFile, setPdfFile] = useState(null);
   const [isEdit, setIsEdit] = useState(true);
+  const [isFat, setIsFat] = useState(false);
   const ref = useRef(null);
+  const [signatureList, setSignatureList] = useState([]);
   const signatureModal = useSignature();
   const { message } = App.useApp();
   return (
@@ -149,44 +151,65 @@ const BaseExample = () => {
             }}
           />
         </Button>
-        {pdfFile && (
-          <Flex gap={8}>
-            <div>编辑模式:</div>
-            <Switch value={isEdit} onChange={setIsEdit} />
-          </Flex>
-        )}
-        {pdfFile && isEdit && (
-          <Button
-            onClick={() => {
-              ref.current.addSignLocation();
-            }}>
-            添加签名位置
-          </Button>
-        )}
-        {pdfFile && !isEdit && (
-          <Button
-            onClick={async () => {
-              try {
-                const blob = await ref.current.sign();
-                const link = document.createElement('a');
-                const url = URL.createObjectURL(blob);
-                link.href = url;
-                link.download = 'signed-document.pdf';
-                link.click();
-                URL.revokeObjectURL(url);
-              } catch (e) {
-                message.error(e.message);
-              }
-            }}>
-            生成签名PDF
-          </Button>
-        )}
+      </Flex>
+      <Flex gap={8} align="center" justify="space-between">
+        <Flex gap={8} align="center">
+          {pdfFile && (
+            <Flex gap={8}>
+              <div>编辑模式:</div>
+              <Switch value={isEdit} onChange={setIsEdit} />
+            </Flex>
+          )}
+          {pdfFile && !isEdit && (
+            <Flex gap={8}>
+              <div>页面是否平铺:</div>
+              <Switch value={isFat} onChange={setIsFat} />
+            </Flex>
+          )}
+          {pdfFile && isEdit && (
+            <Button
+              onClick={() => {
+                ref.current.addSignLocation();
+              }}>
+              添加签名位置
+            </Button>
+          )}
+        </Flex>
+        <Flex gap={8} align="center">
+          {pdfFile && !isEdit && (
+            <Flex>
+              <div>已签名/签名区:</div>
+              <div>
+                {signatureList.filter(item => item.signature).length}/{signatureList.length}
+              </div>
+            </Flex>
+          )}
+          {pdfFile && !isEdit && (
+            <Button
+              onClick={async () => {
+                try {
+                  const blob = await ref.current.sign();
+                  const link = document.createElement('a');
+                  const url = URL.createObjectURL(blob);
+                  link.href = url;
+                  link.download = 'signed-document.pdf';
+                  link.click();
+                  URL.revokeObjectURL(url);
+                } catch (e) {
+                  message.error(e.message);
+                }
+              }}>
+              生成签名PDF
+            </Button>
+          )}
+        </Flex>
       </Flex>
       {pdfFile ? (
         <PDFSignMulti
           url={pdfFile}
           ref={ref}
           isEdit={isEdit}
+          isFlat={!isEdit && isFat}
           onSign={({ size, callback }) => {
             signatureModal({
               mask: (
@@ -201,6 +224,7 @@ const BaseExample = () => {
               }
             });
           }}
+          onChange={setSignatureList}
         />
       ) : null}
     </Flex>
@@ -534,6 +558,7 @@ render(<BaseExample />);
 | filename             | string   | 'signed-document.pdf' | 生成签名PDF的文件名    |
 | defaultSignatureList | array    | -                     | 默认签名位置列表       |
 | isEdit               | boolean  | -                     | 是否处于编辑模式       |
+| isFlat               | boolean  | -                     | 是否平铺显示所有页面     |
 | onSign               | function | -                     | 点击签名区域时的回调函数   |
 | onChange             | function | -                     | 签名位置列表变化回调函数   |
 
@@ -551,14 +576,15 @@ render(<BaseExample />);
 
 PDF 文档查看器组件，提供 PDF 页面浏览功能。
 
-| 属性          | 类型     | 默认值  | 说明                |
-|-------------|--------|------|-------------------|
-| url         | string | -    | PDF 文件的 URL 地址    |
-| className   | string | -    | 自定义 CSS 类名        |
-| defaultPage | number | 1    | 默认显示的页码           |
-| maxWidth    | number | 1200 | 最大显示宽度            |
-| pdfjsUrl    | string | -    | 自定义 pdf.js CDN 地址 |
-| apis        | object | -    | API 配置对象          |
+| 属性          | 类型      | 默认值  | 说明                |
+|-------------|---------|------|-------------------|
+| url         | string  | -    | PDF 文件的 URL 地址    |
+| className   | string  | -    | 自定义 CSS 类名        |
+| defaultPage | number  | 1    | 默认显示的页码           |
+| maxWidth    | number  | 1200 | 最大显示宽度            |
+| pdfjsUrl    | string  | -    | 自定义 pdf.js CDN 地址 |
+| apis        | object  | -    | API 配置对象          |
+| isFlat      | boolean | -    | 是否平铺显示所有页面        |
 
 #### children 渲染属性
 

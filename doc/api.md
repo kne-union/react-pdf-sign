@@ -37,6 +37,7 @@
 | filename             | string   | 'signed-document.pdf' | 生成签名PDF的文件名    |
 | defaultSignatureList | array    | -                     | 默认签名位置列表       |
 | isEdit               | boolean  | -                     | 是否处于编辑模式       |
+| isFlat               | boolean  | -                     | 是否平铺显示所有页面     |
 | onSign               | function | -                     | 点击签名区域时的回调函数   |
 | onChange             | function | -                     | 签名位置列表变化回调函数   |
 
@@ -54,14 +55,15 @@
 
 PDF 文档查看器组件，提供 PDF 页面浏览功能。
 
-| 属性          | 类型     | 默认值  | 说明                |
-|-------------|--------|------|-------------------|
-| url         | string | -    | PDF 文件的 URL 地址    |
-| className   | string | -    | 自定义 CSS 类名        |
-| defaultPage | number | 1    | 默认显示的页码           |
-| maxWidth    | number | 1200 | 最大显示宽度            |
-| pdfjsUrl    | string | -    | 自定义 pdf.js CDN 地址 |
-| apis        | object | -    | API 配置对象          |
+| 属性          | 类型      | 默认值  | 说明                |
+|-------------|---------|------|-------------------|
+| url         | string  | -    | PDF 文件的 URL 地址    |
+| className   | string  | -    | 自定义 CSS 类名        |
+| defaultPage | number  | 1    | 默认显示的页码           |
+| maxWidth    | number  | 1200 | 最大显示宽度            |
+| pdfjsUrl    | string  | -    | 自定义 pdf.js CDN 地址 |
+| apis        | object  | -    | API 配置对象          |
+| isFlat      | boolean | -    | 是否平铺显示所有页面        |
 
 #### children 渲染属性
 

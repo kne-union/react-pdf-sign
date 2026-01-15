@@ -8,19 +8,22 @@ import signPdfFile from './signPdfFile';
 import getInitLocation from './getInitLocation';
 import computedPDFSignLocation from './computedPDFSignLocation';
 
-const PDFSignInner = forwardRef(({ size, currentPage, placeholder, signature, url, width = 200, height = 80, padding, filename = 'signed-document.pdf', defaultLocation, onChange }, ref) => {
+const PDFSignInner = forwardRef(({ size, currentPage, placeholder, signature, url, width = 200, height = 80, padding, filename = 'signed-document.pdf', location, setLocation, onChange }, ref) => {
   const initLocation = useMemo(() => {
-    return getInitLocation({ stageWidth: size.width, stageHeight: size.height, width, height });
+    return getInitLocation({ stageWidth: size.originalWidth, stageHeight: size.originalHeight, width, height });
   }, [size, width, height]);
-  const [location, setLocationOrigin] = useState(Object.assign({}, initLocation, defaultLocation));
-  const setLocation = useRefCallback(value => {
-    setLocationOrigin(Object.assign({}, initLocation, value));
-  });
+
+  const targetLocation = useMemo(() => {
+    return Object.assign({}, initLocation, location);
+  }, [initLocation, location]);
+
+  const setTargetLocation = value => setLocation(Object.assign({}, initLocation, value));
+
   const pdfSignature = useMemo(() => {
     return Object.assign(
       {},
       computedPDFSignLocation({
-        location,
+        location: targetLocation,
         size
       }),
       {
@@ -32,14 +35,14 @@ const PDFSignInner = forwardRef(({ size, currentPage, placeholder, signature, ur
         pageHeight: Math.round(size.originalHeight)
       }
     );
-  }, [location, signature, url, filename, size, currentPage]);
+  }, [targetLocation, signature, url, filename, size, currentPage]);
   const signPdf = useCallback(async () => {
     return await signPdfFile(pdfSignature);
   }, [pdfSignature]);
 
   useImperativeHandle(ref, () => ({
     getLocation: () => location,
-    setLocation: value => setLocation(value),
+    setLocation: value => setTargetLocation(value),
     getPdfSignature: () => pdfSignature,
     sign: () => signPdf()
   }));
@@ -50,11 +53,16 @@ const PDFSignInner = forwardRef(({ size, currentPage, placeholder, signature, ur
     handlerChange?.({ pdfSignature, location });
   }, [pdfSignature, location, handlerChange]);
 
-  return <LocationLayer stageWidth={size.width} stageHeight={size.height} width={width} height={height} padding={padding} placeholder={placeholder} signature={signature} value={location} onChange={setLocation} />;
+  return (
+    <div style={{ transform: `scale(${size.width / size.originalWidth})`, transformOrigin: '0 0' }}>
+      <LocationLayer stageWidth={size.originalWidth} stageHeight={size.originalHeight} width={width} height={height} padding={padding} placeholder={placeholder} signature={signature} value={targetLocation} onChange={setTargetLocation} />
+    </div>
+  );
 });
 
 const PDFSign = withLocale(
   forwardRef(({ placeholder, signature, url, width, height, padding, filename = 'signed-document.pdf', defaultLocation, onChange, ...props }, ref) => {
+    const [location, setLocation] = useState(Object.assign({}, defaultLocation));
     return (
       <PDFViewer {...props} url={url}>
         {({ size, currentPage }) => {
@@ -65,7 +73,8 @@ const PDFSign = withLocale(
               currentPage={currentPage}
               url={url}
               filename={filename}
-              defaultLocation={defaultLocation}
+              location={location}
+              setLocation={setLocation}
               width={width}
               height={height}
               padding={padding}
