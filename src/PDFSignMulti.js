@@ -60,8 +60,10 @@ const PDFSignMultiInner = forwardRef(({ size, currentPage, placeholder, url, wid
     }
   }));
 
+  const scale = size.width / size.originalWidth;
+
   return (
-    <div style={{ transform: `scale(${size.width / size.originalWidth})`, transformOrigin: '0 0' }}>
+    <div style={{ transform: `scale(${scale})`, transformOrigin: '0 0' }}>
       <LocationGroup
         isEdit={isEdit}
         currentPage={currentPage}
