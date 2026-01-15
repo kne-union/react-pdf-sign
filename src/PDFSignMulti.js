@@ -8,8 +8,7 @@ import { signMultiPdfFile } from './signPdfFile';
 import computedPDFSignLocation from './computedPDFSignLocation';
 import getInitLocation from './getInitLocation';
 
-const PDFSignMultiInner = forwardRef(({ size, currentPage, placeholder, url, width = 200, height = 80, padding, filename = 'signed-document.pdf', defaultSignatureList, isEdit, onSign, onChange }, ref) => {
-  const [signatureList, setSignatureList] = useState(defaultSignatureList || []);
+const PDFSignMultiInner = forwardRef(({ size, currentPage, placeholder, url, width = 200, height = 80, padding, filename = 'signed-document.pdf', signatureList, setSignatureList, isEdit, onSign, onChange }, ref) => {
   const { formatMessage } = useIntl();
 
   const pdfSignatureList = useMemo(() => {
@@ -54,44 +53,47 @@ const PDFSignMultiInner = forwardRef(({ size, currentPage, placeholder, url, wid
         signatureList: pdfSignatureList
       });
     },
-    addSignLocation: () => {
+    addSignLocation: page => {
       setSignatureList(signatureList => {
-        return [...signatureList, Object.assign({}, getInitLocation({ width, height, stageWidth: size.width, stageHeight: size.height }), { page: currentPage })];
+        return [...signatureList, Object.assign({}, getInitLocation({ width, height, stageWidth: size.originalWidth, stageHeight: size.originalHeight }), { page: page || currentPage })];
       });
     }
   }));
 
   return (
-    <LocationGroup
-      isEdit={isEdit}
-      currentPage={currentPage}
-      stageWidth={size.width}
-      stageHeight={size.height}
-      width={width}
-      height={height}
-      padding={padding}
-      placeholder={placeholder}
-      value={signatureList}
-      onChange={setSignatureList}
-      onClick={({ index, value }) => {
-        onSign &&
-          onSign({
-            size: value.size,
-            callback: signature => {
-              setSignatureList(value => {
-                const newValue = value.slice(0);
-                newValue[index] = Object.assign({}, newValue[index], { signature });
-                return newValue;
-              });
-            }
-          });
-      }}
-    />
+    <div style={{ transform: `scale(${size.width / size.originalWidth})`, transformOrigin: '0 0' }}>
+      <LocationGroup
+        isEdit={isEdit}
+        currentPage={currentPage}
+        stageWidth={size.originalWidth}
+        stageHeight={size.originalHeight}
+        width={width}
+        height={height}
+        padding={padding}
+        placeholder={placeholder}
+        value={signatureList}
+        onChange={setSignatureList}
+        onClick={({ index, value }) => {
+          onSign &&
+            onSign({
+              size: value.size,
+              callback: signature => {
+                setSignatureList(value => {
+                  const newValue = value.slice(0);
+                  newValue[index] = Object.assign({}, newValue[index], { signature });
+                  return newValue;
+                });
+              }
+            });
+        }}
+      />
+    </div>
   );
 });
 
 const PDFSignMulti = withLocale(
   forwardRef(({ placeholder, url, width, height, padding, filename = 'signed-document.pdf', defaultSignatureList, onSign, onChange, isEdit, ...props }, ref) => {
+    const [signatureList, setSignatureList] = useState(defaultSignatureList || []);
     return (
       <PDFViewer {...props} url={url}>
         {({ size, currentPage }) => {
@@ -102,7 +104,8 @@ const PDFSignMulti = withLocale(
               currentPage={currentPage}
               url={url}
               filename={filename}
-              defaultSignatureList={defaultSignatureList}
+              signatureList={signatureList}
+              setSignatureList={setSignatureList}
               width={width}
               height={height}
               padding={padding}

@@ -1,5 +1,5 @@
 import { Document, Page, pdfjs } from 'react-pdf';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, Fragment } from 'react';
 import { usePreset } from '@kne/global-context';
 import useResize from '@kne/use-resize';
 import classnames from 'classnames';
@@ -9,7 +9,7 @@ import style from '../style.module.scss';
 import 'react-pdf/dist/Page/TextLayer.css';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 
-const PDFViewer = ({ className, defaultPage, apis: propsApis, pdfjsUrl: pdfjsUrlProps, url, maxWidth = 1200, children }) => {
+const PDFViewer = ({ className, defaultPage, apis: propsApis, pdfjsUrl: pdfjsUrlProps, url, maxWidth = 1200, isFlat, children }) => {
   const { apis: baseApis } = usePreset();
   const apis = Object.assign({}, baseApis, propsApis);
   const pdfjsUrl = pdfjsUrlProps || apis.file?.pdfjsUrl || 'https://cdn.jsdelivr.net/npm/pdfjs-dist@5.4.296';
@@ -33,29 +33,11 @@ const PDFViewer = ({ className, defaultPage, apis: propsApis, pdfjsUrl: pdfjsUrl
       setWidth(Math.min(ref.current.clientWidth, maxWidth));
     }
   });
-  return (
-    <div
-      ref={ref}
-      className={classnames(className, style['pdf-view-container'], 'pdf-view-container')}
-      style={{
-        maxWidth: maxWidth
-      }}
-    >
-      <div className={classnames(style['pdf-view'], 'pdf-view')}>
-        <Document
-          {...Object.assign({}, documentProps)}
-          loading={
-            <Flex justify="center">
-              <Spin />
-            </Flex>
-          }
-          onLoadSuccess={({ numPages, ...props }) => {
-            setPageSize(numPages);
-            if (!Number.isInteger(defaultPage)) {
-              setCurrentPage(numPages);
-            }
-          }}
-        >
+
+  const renderPage = ({ currentPage }) => {
+    return (
+      <div className={classnames(style['pdf-view-container'], 'pdf-view-container')}>
+        <div className={classnames(style['pdf-view'], 'pdf-view')}>
           <Page
             width={width}
             pageNumber={currentPage}
@@ -64,32 +46,66 @@ const PDFViewer = ({ className, defaultPage, apis: propsApis, pdfjsUrl: pdfjsUrl
               setSize({ width: Math.round(page.width), height: Math.round(page.height), originalWidth: page.originalWidth, originalHeight: page.originalHeight });
             }}
           />
-        </Document>
+        </div>
+        {size && children && <div className={classnames(style['pdf-view-children'], 'pdf-view-children')}>{typeof children === 'function' ? children({ size, currentPage, pageSize }) : children}</div>}
       </div>
-      {size && children && <div className={classnames(style['pdf-view-children'], 'pdf-view-children')}>{typeof children === 'function' ? children({ size, currentPage, pageSize }) : children}</div>}
-      <div className={classnames(style['pdf-view-page-control'], 'pdf-view-page-control')}>
-        {currentPage > 1 && (
-          <LeftOutlined
-            className={classnames(style['pdf-view-page-control-left'], 'pdf-view-page-control-left')}
-            onClick={() => {
-              setCurrentPage(currentPage - 1);
-            }}
-          />
-        )}
-        {currentPage < pageSize && (
-          <RightOutlined
-            className={classnames(style['pdf-view-page-control-right'], 'pdf-view-page-control-right')}
-            onClick={() => {
-              setCurrentPage(currentPage + 1);
-            }}
-          />
-        )}
-        {pageSize ? (
-          <div className={classnames(style['pdf-view-page-control-current'], 'pdf-view-page-control-current')}>
-            {currentPage}/{pageSize}
+    );
+  };
+  return (
+    <div
+      ref={ref}
+      className={classnames(className, style['pdf-view-container'], 'pdf-view-container')}
+      style={{
+        maxWidth: maxWidth
+      }}
+    >
+      <Document
+        {...Object.assign({}, documentProps)}
+        loading={
+          <Flex justify="center">
+            <Spin />
+          </Flex>
+        }
+        onLoadSuccess={({ numPages, ...props }) => {
+          setPageSize(numPages);
+          if (!Number.isInteger(defaultPage)) {
+            setCurrentPage(numPages);
+          }
+        }}
+      >
+        <Flex vertical gap={8}>
+          {isFlat
+            ? Array.from({ length: pageSize }).map((item, index) => {
+                return <Fragment key={index}>{renderPage({ currentPage: index + 1 })}</Fragment>;
+              })
+            : renderPage({ currentPage })}
+        </Flex>
+        {isFlat ? null : (
+          <div className={classnames(style['pdf-view-page-control'], 'pdf-view-page-control')}>
+            {currentPage > 1 && (
+              <LeftOutlined
+                className={classnames(style['pdf-view-page-control-left'], 'pdf-view-page-control-left')}
+                onClick={() => {
+                  setCurrentPage(currentPage - 1);
+                }}
+              />
+            )}
+            {currentPage < pageSize && (
+              <RightOutlined
+                className={classnames(style['pdf-view-page-control-right'], 'pdf-view-page-control-right')}
+                onClick={() => {
+                  setCurrentPage(currentPage + 1);
+                }}
+              />
+            )}
+            {pageSize ? (
+              <div className={classnames(style['pdf-view-page-control-current'], 'pdf-view-page-control-current')}>
+                {currentPage}/{pageSize}
+              </div>
+            ) : null}
           </div>
-        ) : null}
-      </div>
+        )}
+      </Document>
     </div>
   );
 };
