@@ -59,6 +59,7 @@ const Signature = withLocale(({ onClose, onSuccess, filename, width, height, mas
             try {
               if (signatureCanvasRef.current.isEmpty()) {
                 message.error(formatMessage({ id: 'signatureEmptyError' }));
+                setLoading(false);
                 return;
               }
 
