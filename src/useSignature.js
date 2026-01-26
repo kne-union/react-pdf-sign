@@ -70,8 +70,8 @@ const Signature = withLocale(({ onClose, onSuccess, filename, width, height, mas
                   scale: 2
                 });
                 const canvas = document.createElement('canvas');
-                canvas.width = width * 2;
-                canvas.height = height * 2;
+                canvas.width = Math.min(width * 2, 300);
+                canvas.height = Math.round((height * 368) / canvas.width);
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(maskPng, 0, 0, canvas.width, canvas.height);
                 const resultImage = new Image();
