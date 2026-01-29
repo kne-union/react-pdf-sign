@@ -75,7 +75,7 @@ const LocationLayerInner = withLocale(p => {
     return null;
   }
 
-  const textX = value.x + (width * value.scaleX) / 2 - textWidth / 2;
+  const textX = value.x + (width * value.scaleX) / 2 - textWidth / 2 + 12;
   const textY = value.y + (height * value.scaleY) / 2 - 8;
 
   return (
