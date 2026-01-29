@@ -6,16 +6,20 @@ import useImage from 'use-image';
 import withLocale from '../withLocale';
 import { useIntl } from '@kne/react-intl';
 import getInitLocation from '../getInitLocation';
+import img from './img.png';
 
 const LocationLayerInner = withLocale(p => {
   const { formatMessage } = useIntl();
   const { width = 200, height = 80, padding = 8, stageWidth, stageHeight, placeholder = formatMessage({ id: 'locationLayerPlaceholder' }), signature, active, onClose, onClick, ...props } = p;
+  const [textWidth, setTextWidth] = useState(0);
   const [value, setValue] = useControlValue(props);
   const [isInit, setIsInit] = useState(false);
   const [signatureImage] = useImage(signature);
+  const [iconImage] = useImage(img);
   const groupRef = useRef();
   const signRef = useRef();
   const transformerRef = useRef();
+  const textRef = useRef();
   const computedSignLocation = () => {
     const absolutePosition = signRef.current.absolutePosition();
     const size = signRef.current.getClientRect();
@@ -60,12 +64,23 @@ const LocationLayerInner = withLocale(p => {
       transformerRef.current.nodes([groupRef.current]);
     }
   }, [isInit]);
+
+  useEffect(() => {
+    if (isInit && textRef.current) {
+      setTextWidth(textRef.current.width());
+    }
+  }, [isInit, placeholder]);
+
   if (!(isInit && value)) {
     return null;
   }
 
+  const textX = value.x + (width * value.scaleX) / 2 - textWidth / 2;
+  const textY = value.y + (height * value.scaleY) / 2 - 8;
+
   return (
     <Layer>
+      <Rect x={value.x} y={value.y} width={width * value.scaleX} height={height * value.scaleY} stroke={themeColor} strokeWidth={1} dashEnabled={true} cornerRadius={8} ref={signRef} dash={[5, 5]} />
       <Group
         x={value.x}
         y={value.y}
@@ -80,21 +95,10 @@ const LocationLayerInner = withLocale(p => {
         onTap={onClick}
         onClick={onClick}
       >
-        {signatureImage ? <Image width={width} height={height} image={signatureImage} cornerRadius={8} ref={signRef} /> : <Rect width={width} height={height} fill="#f0f0f0" cornerRadius={8} ref={signRef} />}
+        {signatureImage ? <Image width={width} height={height} image={signatureImage} cornerRadius={8} ref={signRef} /> : <Rect width={width} height={height} ref={signRef} />}
       </Group>
-      <Text
-        listening={false}
-        x={value.x}
-        y={value.y}
-        text={signatureImage ? '' : placeholder}
-        fontSize={16}
-        fill="#666666"
-        fontFamily="Arial"
-        align="center"
-        verticalAlign="middle"
-        width={width * value.scaleX}
-        height={height * value.scaleY}
-      />
+      {!signatureImage ? <Image x={textX - 24} y={textY} width={16} height={16} image={iconImage} /> : null}
+      <Text ref={textRef} listening={false} x={textX} y={textY} text={signatureImage ? '' : placeholder} fontSize={16} fill={themeColor} fontFamily="Arial" align="center" verticalAlign="middle" />
       <Transformer ref={transformerRef} visible={active !== false} keepRatio={true} flipEnabled={false} rotateEnabled={false} borderStroke={themeColor} rotateAnchorStroke={themeColor} anchorStroke={themeColor} padding={padding} />
       {active === true && (
         <Group
