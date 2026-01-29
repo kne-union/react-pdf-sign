@@ -1,9 +1,9 @@
 {
   "files": {
-    "main.js": "/react-pdf-sign/static/js/main.f55ef22d.js",
-    "react_pdf_sign_1_1_7.js": "/react-pdf-sign/remoteEntry.js",
+    "main.js": "/react-pdf-sign/static/js/main.6c398eba.js",
+    "react_pdf_sign_1_1_8.js": "/react-pdf-sign/remoteEntry.js",
     "static/css/72.f6c1006c.chunk.css": "/react-pdf-sign/static/css/72.f6c1006c.chunk.css",
-    "static/js/72.de88015c.chunk.js": "/react-pdf-sign/static/js/72.de88015c.chunk.js",
+    "static/js/72.818782bb.chunk.js": "/react-pdf-sign/static/js/72.818782bb.chunk.js",
     "static/css/483.ef9334d8.chunk.css": "/react-pdf-sign/static/css/483.ef9334d8.chunk.css",
     "static/js/638.7c943e7c.chunk.js": "/react-pdf-sign/static/js/638.7c943e7c.chunk.js",
     "static/js/848.58a74074.chunk.js": "/react-pdf-sign/static/js/848.58a74074.chunk.js",
@@ -11,7 +11,7 @@
     "static/js/446.87ab260d.chunk.js": "/react-pdf-sign/static/js/446.87ab260d.chunk.js",
     "static/js/233.594b10a1.chunk.js": "/react-pdf-sign/static/js/233.594b10a1.chunk.js",
     "static/css/784.a3c85373.chunk.css": "/react-pdf-sign/static/css/784.a3c85373.chunk.css",
-    "static/js/784.e36e8719.chunk.js": "/react-pdf-sign/static/js/784.e36e8719.chunk.js",
+    "static/js/784.d52c023c.chunk.js": "/react-pdf-sign/static/js/784.d52c023c.chunk.js",
     "static/js/201.fa98451e.chunk.js": "/react-pdf-sign/static/js/201.fa98451e.chunk.js",
     "static/js/825.a4db6d72.chunk.js": "/react-pdf-sign/static/js/825.a4db6d72.chunk.js",
     "static/js/467.3dc68bd2.chunk.js": "/react-pdf-sign/static/js/467.3dc68bd2.chunk.js",
@@ -32,14 +32,14 @@
     "static/js/736.59b69e76.chunk.js": "/react-pdf-sign/static/js/736.59b69e76.chunk.js",
     "static/js/391.9ddbd3ca.chunk.js": "/react-pdf-sign/static/js/391.9ddbd3ca.chunk.js",
     "static/js/689.f1b36776.chunk.js": "/react-pdf-sign/static/js/689.f1b36776.chunk.js",
-    "static/js/753.f89db7d6.chunk.js": "/react-pdf-sign/static/js/753.f89db7d6.chunk.js",
+    "static/js/753.75d97bda.chunk.js": "/react-pdf-sign/static/js/753.75d97bda.chunk.js",
     "static/media/example.pdf": "/react-pdf-sign/static/media/example.034ae1f30c5fe6d68d26.pdf",
     "static/media/signature.png": "/react-pdf-sign/static/media/signature.841922fcd4ffbb9de231.png",
     "index.html": "/react-pdf-sign/index.html",
-    "main.f55ef22d.js.map": "/react-pdf-sign/static/js/main.f55ef22d.js.map",
+    "main.6c398eba.js.map": "/react-pdf-sign/static/js/main.6c398eba.js.map",
     "remoteEntry.js.map": "/react-pdf-sign/remoteEntry.js.map",
     "72.f6c1006c.chunk.css.map": "/react-pdf-sign/static/css/72.f6c1006c.chunk.css.map",
-    "72.de88015c.chunk.js.map": "/react-pdf-sign/static/js/72.de88015c.chunk.js.map",
+    "72.818782bb.chunk.js.map": "/react-pdf-sign/static/js/72.818782bb.chunk.js.map",
     "483.ef9334d8.chunk.css.map": "/react-pdf-sign/static/css/483.ef9334d8.chunk.css.map",
     "638.7c943e7c.chunk.js.map": "/react-pdf-sign/static/js/638.7c943e7c.chunk.js.map",
     "848.58a74074.chunk.js.map": "/react-pdf-sign/static/js/848.58a74074.chunk.js.map",
@@ -47,7 +47,7 @@
     "446.87ab260d.chunk.js.map": "/react-pdf-sign/static/js/446.87ab260d.chunk.js.map",
     "233.594b10a1.chunk.js.map": "/react-pdf-sign/static/js/233.594b10a1.chunk.js.map",
     "784.a3c85373.chunk.css.map": "/react-pdf-sign/static/css/784.a3c85373.chunk.css.map",
-    "784.e36e8719.chunk.js.map": "/react-pdf-sign/static/js/784.e36e8719.chunk.js.map",
+    "784.d52c023c.chunk.js.map": "/react-pdf-sign/static/js/784.d52c023c.chunk.js.map",
     "201.fa98451e.chunk.js.map": "/react-pdf-sign/static/js/201.fa98451e.chunk.js.map",
     "825.a4db6d72.chunk.js.map": "/react-pdf-sign/static/js/825.a4db6d72.chunk.js.map",
     "467.3dc68bd2.chunk.js.map": "/react-pdf-sign/static/js/467.3dc68bd2.chunk.js.map",
@@ -68,9 +68,9 @@
     "736.59b69e76.chunk.js.map": "/react-pdf-sign/static/js/736.59b69e76.chunk.js.map",
     "391.9ddbd3ca.chunk.js.map": "/react-pdf-sign/static/js/391.9ddbd3ca.chunk.js.map",
     "689.f1b36776.chunk.js.map": "/react-pdf-sign/static/js/689.f1b36776.chunk.js.map",
-    "753.f89db7d6.chunk.js.map": "/react-pdf-sign/static/js/753.f89db7d6.chunk.js.map"
+    "753.75d97bda.chunk.js.map": "/react-pdf-sign/static/js/753.75d97bda.chunk.js.map"
   },
   "entrypoints": [
-    "static/js/main.f55ef22d.js"
+    "static/js/main.6c398eba.js"
   ]
 }
